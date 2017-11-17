@@ -10,6 +10,7 @@ public class SAFCON {
         JOptionPane.showMessageDialog(null, "Esta es mi parte(Sotelo)");
         JOptionPane.showMessageDialog(null, "Hola a todos (SeRoGra)");
         JOptionPane.showMessageDialog(null, "Esta es mi parte(Jonatan)");
-
+        JOptionPane.showMessageDialog(null, "Esta es mi parte(Christian Rodriguez)");
+        
     }       
 }
