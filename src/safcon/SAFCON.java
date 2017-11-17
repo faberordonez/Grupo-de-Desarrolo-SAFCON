@@ -7,6 +7,7 @@ public class SAFCON {
    
     public static void main(String[] args) {
         JOptionPane.showMessageDialog(null, "Esta es mi parte(Sotelo)");
+        JOptionPane.showMessageDialog(null, "Hola a todos (SeRoGra)");
     }
     
 }
