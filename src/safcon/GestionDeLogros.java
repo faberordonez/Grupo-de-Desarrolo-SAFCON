@@ -5,6 +5,11 @@
  */
 package safcon;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Usuario
@@ -14,10 +19,40 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
     /**
      * Creates new form GestionDeLogros
      */
+    ConexionBD cone, cone2;
     public GestionDeLogros() {
+        cone = new ConexionBD();
+        cone2 = new ConexionBD();
         initComponents();
+        cargarCombo();
+        
     }
-
+    public void cargarCombo(){ 
+        try{
+            ResultSet rs = cone.consultaBD("SELECT id FROM Docentes");
+            while(rs.next()){
+                jComboBox1.addItem(rs.getInt("id"));
+            }
+           cargarMaterias(); 
+        } 
+        
+        catch(SQLException ex){
+            Logger.getLogger(GestionDeLogros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
+    
+    public void cargarMaterias(){ 
+        try{
+            ResultSet rs = cone2.consultaBD("SELECT Nombre FROM Materias WHERE id_Docente="+jComboBox1.getSelectedItem());
+            while(rs.next()){
+                jComboBox2.addItem(rs.getString("Nombre"));
+            }
+            
+        } 
+        catch(SQLException ex){
+            Logger.getLogger(GestionDeLogros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,11 +89,13 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
 
         jLabel1.setText("Codigo del Docente");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
 
         jLabel2.setText("Nombre del Docente");
-
-        jLabel3.setText("Aqui carga el nombre del docente ");
 
         jLabel4.setText("Nombre del Logro");
 
@@ -67,8 +104,6 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
         jLabel7.setText("Auto Increment");
 
         jLabel8.setText("Materia");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Carga las materias que da el docente" }));
 
         jLabel9.setText("Codigo del curso al que va el logro");
 
@@ -85,6 +120,11 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton1.setText("Crear Logro");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,11 +144,11 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
@@ -136,10 +176,11 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
@@ -171,11 +212,29 @@ public class GestionDeLogros extends javax.swing.JInternalFrame {
                         .addComponent(jLabel11)))
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        try{
+            ConexionBD cone2 = new ConexionBD();
+            ResultSet rs = cone2.consultaBD("SELECT Nombre FROM Docentes WHERE id="+jComboBox1.getSelectedItem());
+            while(rs.next()){
+                jLabel3.setText(rs.getString("Nombre"));
+            }
+            
+        } 
+        catch(SQLException ex){
+            Logger.getLogger(GestionDeLogros.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
